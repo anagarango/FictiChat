@@ -25,3 +25,23 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.typewriter {
+  overflow: hidden; /* Ensures the text is initially hidden */
+}
+
+.typewriter span {
+  display: inline-block;
+  opacity: 0; /* Initially hide each letter */
+  animation: reveal 0.1s forwards; /* Apply the animation */
+}
