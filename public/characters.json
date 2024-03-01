@@ -1,16 +1,10 @@
 [
-  "Cher Horowitz",
-  "Mario",
-  "Yoda",
-  "Dracula",
-  "Elmo",
-  "SpongeBob SquarePants",
-  "Homer Simpson",
-  "Phoebe Buffay",
-  "Joey Tribbiani",
-  "Creed Bratton",
-  "Kevin Malone",
-  "Minion",
-  "Patrick Star",
-  "Michael Scott"
+  {"Movies":["Cher Horowitz", "Minion", "Shrek", "Forrest Gump", "Austin Powers", "Regina George", "Derek Zoolander", "Tony Stark", "Rocket Raccoon", "Deadpool"]},
+  {"Video Games":["Mario", "Ellie Williams", "Arthur Morgan", "Master Chief", "Steve Minecraft", "Pikachu"]},
+  {"Star Wars":["Yoda", "Darth Vader", "Chewbacca", "C-3PO", "Emperor Palpatine", "The Mandalorian"]},
+  {"SpongeBob SquarePants":["SpongeBob SquarePants", "Patrick Star", "Squidward Tentacles", "Mr. Krabs", "Larry the Lobster", "Gary the Snail"]},
+  {"The Simpsons":["Homer Simpson", "Bart Simpson", "Ned Flanders", "Moe Szyslak", "Krusty the Clown", "Chief Wiggum", "Milhouse Van Houten", "Groundskeeper Willie"]},
+  {"Sesame Street":["Elmo", "Big Bird", "Cookie Monster", "Oscar the Grouch", "Count von Count", "Grover"]},
+  {"The Office":["Michael Scott", "Jim Halpert", "Pam Beesly", "Dwight Schrute", "Andy Bernard", "Kevin Malone", "Kelly Kapoor", "Creed Bratton", "Erin Hannon", "Toby Flenderson"]},
+  {"Friends":["Rachel Green", "Ross Geller", "Monica Geller", "Chandler Bing", "Phoebe Buffay", "Joey Tribbiani"]}
 ]
