@@ -14,16 +14,19 @@ interface Params {
 
 interface ChatObject {
   user:string,
-  message:string
+  message:string,
+  role:string
 }
 
 export default function Character(characterName:Params) {
   const r = useRouter()
 
   const character:string = characterName.searchParams.character || ""
-  const [chat, setChat] = useState<ChatObject[]>([])
+  const storedChat = localStorage.getItem(character);
+  const [chat, setChat] = useState<ChatObject[]>(storedChat ? JSON.parse(storedChat) : [])
   const [message, setMessage] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
+  const [animation, setAnimation] = useState<string>("")
 
   const handleResponses = async (e:any, mess:string, char:string) => {
     e.preventDefault()
@@ -36,13 +39,19 @@ export default function Character(characterName:Params) {
       method:'post',
       url: `/api/character?character=${char}`,
       data:{
+        context: chat,
         message: mess
       }
     });
     const messageData = await response.data
-    setChat([...chat, {"user":character, "message":messageData.message}])
+    setAnimation(messageData.message)
+    setChat([...chat, {"user":character, "message":messageData.message, "role":"assistant"}])
     setLoading(false)
   }
+
+  useEffect(() => {
+    localStorage.setItem(character, JSON.stringify(chat))
+  }, [chat])
 
   return (
     <main className="h-screen p-[20px] bg-slate-100">
@@ -65,12 +74,12 @@ export default function Character(characterName:Params) {
             </div> 
           }
           {chat.map((o,i)=>(
-            <div key={i} className={`flex mb-2 p-2 max-w-[45%] ${o.user == "You" ? "self-end bg-[#97D8C4] w-fit rounded-tl-md rounded-br-md rounded-bl-md border border-[#87BFAE]" : "bg-[#D9D9D9] w-fit rounded-tr-md rounded-br-md rounded-bl-md border border-[#CACACA]"}`}>
+            <div key={i} className={`flex mb-3 p-[10px] max-w-[75%] ${o.user == "You" ? "self-end bg-[#97D8C4] w-fit rounded-tl-2xl rounded-br-2xl rounded-bl-2xl border border-[#87BFAE]" : "bg-[#D9D9D9] w-fit rounded-tr-2xl rounded-br-2xl rounded-bl-2xl border border-[#CACACA]"}`}>
               {o.user == "You" ? (<p>{o.message}</p>) 
                 :
                 <p className="typewriter">
-                  {o.message.split(' ').map((letter, index) => (
-                    <span key={index} style={{animationDelay: `${20 * index}ms`, whiteSpace: "pre"}}>{letter} </span>
+                  {o.message.split(' ').map((letter, index) =>(
+                    <span key={index} style={{animationDelay: animation == o.message ? `${25 * index}ms` : "0ms", whiteSpace: "pre"}}>{letter} </span>
                   ))}
                   
                 </p>
@@ -79,8 +88,8 @@ export default function Character(characterName:Params) {
           ))}
         </div>
         <form onSubmit={(e)=>handleResponses(e, message, character)} className="flex m-4 bg-[#D9F3EB] py-3 px-5 rounded-md justify-between border border-[#97D8C4]">
-          <input type="text" placeholder={`Message ${character} GPT...`} value={message} onChange={(e)=>{setMessage(e.target.value)}} className="outline-none  bg-[#D9F3EB] w-10/12"/>
-          <button type="submit" onClick={()=>{if(message){setChat([...chat, {"user":"You", "message":message}])}}}>
+          <input type="text" placeholder={`Chat with ${character}...`} value={message} onChange={(e)=>{setMessage(e.target.value)}} className="outline-none  bg-[#D9F3EB] w-10/12"/>
+          <button type="submit" onClick={()=>{if(message){setChat([...chat, {"user":"You", "message":message, "role":"user"}])}}}>
             <img src={loading ? "/loading.gif" : "/arrow.png"} className='w-4'/>
           </button>
         </form>

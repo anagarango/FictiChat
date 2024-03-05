@@ -24,7 +24,21 @@ export default function Home() {
               {o[characterArray[0]].map((character:string, index:number) => (
                 <div key={index} onMouseOver={() => setHoverName(character)} onMouseLeave={() => setHoverName("")} onClick={()=>handleSelectedCharacter(character)} className="relative rounded-full max-w-[130px] inline-block mr-3 mb-[10px] cursor-pointer bg-[#D9F3EB] hover:bg-[#567C70]">
                   <Image src={`/characters/${character}.png`} alt={character} width={100} height={100} className={`rounded-full object-cover w-[130px] h-[130px] ${hoverName == character ? "brightness-50" : ""}`} />
-                  {hoverName == character && <p className={`absolute text-center text-white whitespace-break-spaces w-[130px] px-3 font-bold ${character.length >= 13 ? "top-[30%]" : "top-[40%]"}`}>{character}</p>}
+                  {hoverName == character && 
+                  <p className={`absolute text-center text-white whitespace-break-spaces w-[130px] px-3 font-bold ${character.includes(' ') ? "top-[30%]" : "top-[40%]"}`}>
+                    {character.split(' ').map((word, index) => {
+                      if(index == 0){ 
+                        return(
+                          <>
+                            {word}
+                            <br />
+                          </>
+                        )
+                      } else {
+                        return `${word} `
+                      }
+                    })}
+                  </p>}
                 </div>
               ))}
               </div>

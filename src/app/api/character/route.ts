@@ -17,18 +17,29 @@ export async function GET(request: NextRequest) {
   // return NextResponse.json({ message: character}, { status: 200 })
 }
 
+interface ChatObject {
+  user:string,
+  message:string,
+  role:string
+}
+
 export async function POST(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const character = searchParams.get('character');
 
     const requestData = await request.json();
+    const formattedConversation = requestData.context.map(({ user, message, role }:ChatObject) => ({
+      role,
+      content: message
+    }));
+    
  
 
     const completion = await openai.chat.completions.create({
       messages: [
-        { role: 'system', content: `Act like ${character}. I want you to respond and answer like ${character} using the tone, manner and vocabulary ${character} would use. Do not write any explanations. Only answer like ${character}. You must know all of the knowledge of ${character}.` },
-        { role: 'user', content: requestData.message }
+        { role: 'system', content: `I want you to respond and answer like ${character} using the tone, manner and vocabulary ${character} would use. You must know all of the knowledge of ${character}. Answer logically to whats been asked to you.` },
+        ...formattedConversation,
       ],
       model: 'gpt-3.5-turbo',
     });

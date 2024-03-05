@@ -14,7 +14,6 @@
 
 .typewriter {
   overflow: hidden; /* Ensures the text is initially hidden */
-  padding: 7px;
   word-break: normal;
 }
 
