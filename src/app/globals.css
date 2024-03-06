@@ -22,3 +22,7 @@
   visibility: hidden;
   animation: reveal 0.1s forwards; /* Apply the animation */
 }
+
+#container{
+  height: calc(100% - 60px);
+}

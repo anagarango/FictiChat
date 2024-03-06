@@ -6,6 +6,14 @@ import { useRouter } from 'next/navigation'
 
 export default function Home() {
   const r = useRouter()
+  var allLocalStorage:any = []
+  useEffect(() => {
+    // Check if localStorage is available (client-side)
+    if (typeof window !== 'undefined' && window.localStorage) {
+      // Access localStorage here
+      allLocalStorage = {...localStorage}
+    }
+  }, []);
   const [hoverName, setHoverName] = useState<string | null>(null)
   const [password, setPassword] = useState<string>("")
   const [check, setCheck] = useState("checking")
@@ -18,7 +26,6 @@ export default function Home() {
     e.preventDefault()
     const res = await fetch(`/api/password?pass=${password}`)
     const passwordCheck = await res.json()
-    console.log(passwordCheck.password)
     if(passwordCheck.password == "correct"){
       setCheck("correct")
     } else {
@@ -28,7 +35,7 @@ export default function Home() {
 
 
   return (
-    <main className="flex min-h-screen flex-col p-[20px] bg-slate-100">
+    <main className="flex h-screen max-h-screen flex-col items-center bg-slate-100">
       {check !== "correct" ? 
         <form onSubmit={(e)=>CheckPassword(e)} className="w-full h-screen flex flex-col items-center justify-center">
           <h1>Quien fue la razon porque te enamorastes con el papa?</h1>
@@ -37,39 +44,74 @@ export default function Home() {
           <h2 className="text-red-600 font-black">{check == "wrong" ? "Wrong Password!" : ""}</h2>
         </form>
       :
-      <>
-      <h1 className='text-xl font-bold text-center mb-10 mt-5'>Welcome to CherGPT! Chat with your favourite character</h1>
-        {Characters.map((o, i) => {
-          var sectionName = Object.keys(o) as (keyof typeof o)[]
-          var charcterArray: any = o[sectionName[0]];
-          return (
-            <div key={i} className="bg-white p-3 mb-3 rounded-md">
-              <h1 className='text-lg font-bold mb-3'>{Object.keys(o)}</h1>
-              <div className="whitespace-nowrap overflow-x-auto rounded-md">
-              {charcterArray.map((character:string, index:number) => (
-                <div key={index} onMouseOver={() => setHoverName(character)} onMouseLeave={() => setHoverName("")} onClick={()=>handleSelectedCharacter(character)} className="relative rounded-full max-w-[130px] inline-block mr-3 mb-[10px] cursor-pointer bg-[#D9F3EB] hover:bg-[#567C70]">
-                  <Image src={`/characters/${character}.png`} alt={character} width={100} height={100} className={`rounded-full object-cover w-[130px] h-[130px] ${hoverName == character ? "brightness-50" : ""}`} />
-                  {hoverName == character && 
-                  <p className={`absolute text-center text-white whitespace-break-spaces w-[130px] px-3 font-bold ${character.includes(' ') ? "top-[30%]" : "top-[40%]"}`}>
-                    {character.split(' ').map((word, index) => {
-                      if(index == 0){ 
-                        return(
-                          <>
-                            {word}
-                            <br />
-                          </>
-                        )
-                      } else {
-                        return `${word} `
-                      }
-                    })}
-                  </p>}
+        <>
+          <div className='bg-white p-3 flex w-full justify-between'>
+            <h1 className='text-xl font-bold'>FictiChat</h1>
+            <div className='flex gap-2'>
+              <p>Feedback</p>
+              <p>Sign In</p>
+            </div>
+          </div>
+          
+          <div id="container" className='flex max-w-[1100px] gap-4 p-[20px]'>
+            <div className='w-2/4 overflow-y-auto flex flex-col gap-2'>
+              {Characters.map((o, i) => {
+                var sectionName = Object.keys(o) as (keyof typeof o)[]
+                var charcterArray: any = o[sectionName[0]];
+                return (
+                  <div key={i} className="bg-white p-3 rounded-md">
+                    <h1 className='text-lg font-bold mb-3'>{Object.keys(o)}</h1>
+                    <div className="whitespace-nowrap overflow-x-auto">
+                    {charcterArray.map((character:string, index:number) => (
+                      <div key={index} onMouseOver={() => setHoverName(character)} onMouseLeave={() => setHoverName("")} onClick={()=>handleSelectedCharacter(character)} className="relative rounded-full max-w-[100px] inline-block mr-3 mb-[10px] cursor-pointer bg-[#D9F3EB] hover:bg-[#567C70]">
+                        <Image src={`/characters/${character}.png`} alt={character} width={100} height={100} className={`rounded-full object-cover w-[100px] h-[100px] ${hoverName == character ? "brightness-50" : ""}`} />
+                        {hoverName == character && 
+                        <p className={`absolute text-center text-white text-[13px] whitespace-break-spaces w-[100px] px-2 font-bold ${character.includes(' ') ? "top-[30%]" : "top-[40%]"}`}>
+                          {character.split(' ').map((word, index) => {
+                            if(index == 0){ 
+                              return(
+                                <>
+                                  {word}
+                                  <br />
+                                </>
+                              )
+                            } else {
+                              return `${word} `
+                            }
+                          })}
+                        </p>}
+                      </div>
+                    ))}
+                    </div>
+                  </div>
+                )
+              })}
+              </div>
+              <div className='flex flex-col w-2/4 bg-white p-3 rounded-md'>
+              <h1 className='text-lg font-bold mb-3'>Messages</h1>
+              {Object.keys(allLocalStorage).length < 2 && 
+                <div className='h-full flex flex-col justify-center items-center p-2'>
+                  <img src="/Conversation.svg" className='w-24 mb-4'/>
+                  <p>No messages yet, start the conversation!</p>
                 </div>
-              ))}
+              }
+              {Object.keys(allLocalStorage).map((o,i)=>{
+                if(o !== "chakra-ui-color-mode"){
+                  var lastMessageObject = JSON.parse(allLocalStorage[o])
+                  return(
+                    <div onClick={()=>handleSelectedCharacter(o)} className='flex items-center border-b p-2 cursor-pointer hover:bg-slate-100'>
+                      <img src={`/characters/${o}.png`} alt={o} className={`rounded-full object-cover min-w-[70px] w-[70px] h-[70px] bg-[#D9F3EB]`} />
+                      <div className='pl-3 overflow-hidden'>
+                        <h3 className='text-md font-bold'>{o}</h3>
+                        <p className='whitespace-nowrap overflow-hidden text-ellipsis'>{lastMessageObject[lastMessageObject.length - 1]?.message}</p>
+                      </div>
+                    </div>
+                  )
+                }
+                
+              })}
               </div>
             </div>
-          )
-        })}
         </>}
     </main>
   )
