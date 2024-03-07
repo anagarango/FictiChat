@@ -59,16 +59,16 @@ export default function Home() {
                     <h1 className='text-lg font-bold mb-3'>{Object.keys(o)}</h1>
                     <div className="whitespace-nowrap overflow-x-auto">
                     {charcterArray.map((character:string, index:number) => (
-                      <div key={index} onClick={()=>handleSelectedCharacter(character)} className="relative rounded-full max-w-[100px] inline-block mr-3 mb-[10px] cursor-pointer bg-[#D9F3EB]">
+                      <div key={`${index} + ${i}`} onClick={()=>handleSelectedCharacter(character)} className="relative rounded-full max-w-[100px] inline-block mr-3 mb-[10px] cursor-pointer bg-[#D9F3EB]">
                         <Image src={`/characters/${character}.png`} alt={character} width={100} height={100} className="rounded-full object-cover w-[100px] h-[100px]" />
                         <p className={`absolute opacity-0 text-center flex justify-center items-center text-white text-[13px] whitespace-break-spaces w-[100px] h-[100px] rounded-full px-2 font-bold duration-200 hover:opacity-100 hover:bg-gray-950/50 top-0`}>
-                          {character.split(' ').map((word, index) => {
-                            if(index == 0){ 
+                          {character.split(' ').map((word, indexWord) => {
+                            if(indexWord == 0){ 
                               return(
-                                <>
+                                <span key={`word:${indexWord}`}>
                                   {word}
                                   <br />
-                                </>
+                                </span>
                               )
                             } else {
                               return `${word} `
@@ -91,10 +91,9 @@ export default function Home() {
                 </div>
               }
               {Object.keys(allLocalStorage).map((o,i)=>{
-                if(o !== "chakra-ui-color-mode"){
                   var lastMessageObject = JSON.parse(allLocalStorage[o])
                   return(
-                    <div onClick={()=>handleSelectedCharacter(o)} className='flex items-center border-b p-2 cursor-pointer hover:bg-slate-100'>
+                    <div key={i} onClick={()=>handleSelectedCharacter(o)} className='flex items-center border-b p-2 cursor-pointer hover:bg-slate-100'>
                       <img src={`/characters/${o}.png`} alt={o} className={`rounded-full object-cover min-w-[70px] w-[70px] h-[70px] bg-[#D9F3EB]`} />
                       <div className='pl-3 overflow-hidden'>
                         <h3 className='text-md font-bold'>{o}</h3>
@@ -102,8 +101,6 @@ export default function Home() {
                       </div>
                     </div>
                   )
-                }
-                
               })}
               </div>
             </div>

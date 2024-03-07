@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     const character = searchParams.get('character');
 
     const requestData = await request.json();
-    const formattedConversation = requestData.context.map(({ user, message, role }:ChatObject) => ({
+    const formattedConversation = requestData.context.map(({ message, role }:ChatObject) => ({
       role,
       content: message
     }));
