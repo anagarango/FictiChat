@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import axios from "axios";
+import Image from "next/image";
 
 export default function FeedbackForm({ showFeedback = false, closeFeedback = () => {} }: { showFeedback: boolean; closeFeedback: Function }) {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -46,7 +47,7 @@ export default function FeedbackForm({ showFeedback = false, closeFeedback = () 
               <input className="bg-[#D9F3EB] w-full p-2 rounded-md text-sm outline-none" type="email" placeholder="Email:" required ref={emailRef} />
               <textarea placeholder="Tell me what you think..." rows={2} className="outline-none p-2 rounded-md my-2 bg-[#D9F3EB] w-full text-sm" required ref={messageRef}></textarea>
               <div className="flex justify-end gap-3 pt-5">
-                <button type="submit" disabled={idleEmail} className='bg-[#50A98D] text-white py-1 px-2 rounded-md cursor-pointer'>{idleEmail ? <img src="/spinner.svg" className="w-[50px] h-5" /> : "Submit"}</button>
+                <button type="submit" disabled={idleEmail} className='bg-[#50A98D] text-white py-1 px-2 rounded-md cursor-pointer'>{idleEmail ? <Image alt="loading gif" src="/spinner.svg" width={70} height={70} className="w-[50px] h-5" /> : "Submit"}</button>
                 <button onClick={() => closeFeedback(false)} className='text-[#50A98D] bg-gray-200 py-1 px-2 rounded-md cursor-pointer'>Cancel</button>
               </div>
             </div>

@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import Header from '../components/Header'
 import FeedbackForm from '../components/FeedbackForm'
 import axios from "axios"
@@ -65,9 +66,9 @@ export default function Character(characterName:Params) {
       <div className='h-full w-full max-w-[1060px] p-[20px]'>
         <div className="flex flex-col bg-white rounded-lg h-full">
           <div className='flex items-center border-b-2 p-4'>
-            <img src="/return.png" onClick={()=>r.push("/")} className="w-[20px] mr-5 cursor-pointer"/>
+            <Image src="/return.png" alt="return button" width={70} height={70}  onClick={()=>r.push("/")} className="w-[20px] mr-5 cursor-pointer"/>
             <div className="relative rounded-full max-w-[50px] inline-block bg-[#D9F3EB]">
-              <img src={`/characters/${character}.png`} className="rounded-full object-cover w-[50px] h-[50px]"/>
+              <Image src={`/characters/${character}.png`} alt={`${character} image`} width={70} height={70}  className="rounded-full object-cover w-[50px] h-[50px]"/>
             </div>
             <h2 className='font-bold text-lg pl-2'>{character}</h2>
           </div>
@@ -75,7 +76,7 @@ export default function Character(characterName:Params) {
           <div className='flex flex-col p-5 overflow-y-scroll overflow-x-hidden h-full'>
             {chat.length < 1 && <div className='flex h-full justify-center items-center flex-col'>
                 <div className="relative rounded-full max-w-[100px] max-h-[100px] inline-block bg-[#D9F3EB]">
-                  <img src={`/characters/${character}.png`} className="rounded-full object-cover w-[100px] h-[100px]"/>
+                  <Image src={`/characters/${character}.png`} alt={`${character} image`} width={70} height={70}  className="rounded-full object-cover w-[100px] h-[100px]"/>
                 </div>
                 <h2 className='font-bold text-xl pt-4'>Start a chat with me!</h2>
               </div> 
@@ -97,7 +98,7 @@ export default function Character(characterName:Params) {
           <form onSubmit={(e)=>handleResponses(e, message, character)} className="flex m-4 bg-[#D9F3EB] py-3 px-5 rounded-md justify-between border border-[#97D8C4]">
             <input type="text" placeholder={`Chat with ${character}...`} value={message} onChange={(e)=>{setMessage(e.target.value)}} className="outline-none  bg-[#D9F3EB] w-10/12"/>
             <button type="submit" onClick={()=>{if(message){setChat([...chat, {"user":"You", "message":message, "role":"user"}])}}}>
-              <img src={loading ? "/loading.gif" : "/arrow.png"} className='w-4'/>
+              <Image width={70} height={70}  alt={loading ? "loading gif" : "send.gif"} src={loading ? "/loading.gif" : "/arrow.png"} className='w-4'/>
             </button>
           </form>
         </div>

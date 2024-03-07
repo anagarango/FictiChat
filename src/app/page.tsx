@@ -8,17 +8,17 @@ import { useRouter } from 'next/navigation'
 
 export default function Home() {
   const r = useRouter()
-  var allLocalStorage:any = []
-  useEffect(() => {
-    // Check if localStorage is available (client-side)
-    if (typeof window !== 'undefined' && window.localStorage) {
-      // Access localStorage here
-      allLocalStorage = {...localStorage}
-    }
-  }, []);
+  
+  const [allLocalStorage, setAllLocalStorage] = useState<any>({});
   const [password, setPassword] = useState<string>("")
   const [check, setCheck] = useState("checking")
   const [viewFeedback, setViewFeedback] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (window.localStorage) {
+      setAllLocalStorage({...localStorage})
+    }
+  }, []);
 
   const handleSelectedCharacter = (characterName: string) => {
     r.push(`/character?character=${characterName}`)
@@ -84,9 +84,9 @@ export default function Home() {
             </div>
             <div id="messages-section" className='flex flex-col w-2/4 bg-white p-3 rounded-md'>
               <h1 className='text-lg font-bold mb-3'>Messages</h1>
-              {Object.keys(allLocalStorage).length < 2 && 
+              {Object.keys(allLocalStorage).length < 1 && 
                 <div className='h-full flex flex-col justify-center items-center p-2'>
-                  <img src="/Conversation.svg" className='w-24 mb-4'/>
+                  <Image src="/Conversation.svg" height={96} width={96} alt="text bubbles" className='w-24 mb-4'/>
                   <p className='text-center'>No messages yet, start the conversation!</p>
                 </div>
               }
@@ -94,7 +94,7 @@ export default function Home() {
                   var lastMessageObject = JSON.parse(allLocalStorage[o])
                   return(
                     <div key={i} onClick={()=>handleSelectedCharacter(o)} className='flex items-center border-b p-2 cursor-pointer hover:bg-slate-100'>
-                      <img src={`/characters/${o}.png`} alt={o} className={`rounded-full object-cover min-w-[70px] w-[70px] h-[70px] bg-[#D9F3EB]`} />
+                      <Image src={`/characters/${o}.png`} width={70} height={70} alt={o} className={`rounded-full object-cover min-w-[70px] w-[70px] h-[70px] bg-[#D9F3EB]`} />
                       <div className='pl-3 overflow-hidden'>
                         <h3 className='text-md font-bold'>{o}</h3>
                         <p className='whitespace-nowrap overflow-hidden text-ellipsis'>{lastMessageObject[lastMessageObject.length - 1]?.message}</p>
