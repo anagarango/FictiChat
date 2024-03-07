@@ -1,6 +1,8 @@
 "use client"
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Header from '../components/Header'
+import FeedbackForm from '../components/FeedbackForm'
 import axios from "axios"
 
 interface SearchParams {
@@ -27,6 +29,7 @@ export default function Character(characterName:Params) {
   const [message, setMessage] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
   const [animation, setAnimation] = useState<string>("")
+  const [viewFeedback, setViewFeedback] = useState<boolean>(false)
 
   const handleResponses = async (e:any, mess:string, char:string) => {
     e.preventDefault()
@@ -57,13 +60,8 @@ export default function Character(characterName:Params) {
 
   return (
     <main className="flex flex-col h-screen items-center bg-slate-100">
-      <div className='bg-white p-3 flex w-full justify-between'>
-            <h1 className='text-xl font-bold'>FictiChat</h1>
-            <div className='flex gap-2'>
-              <p>Feedback</p>
-              <p>Sign In</p>
-            </div>
-          </div>
+      <Header setViewFeedback={setViewFeedback}/>
+      <FeedbackForm showFeedback={viewFeedback} closeFeedback={setViewFeedback}/>
       <div className='h-full w-full max-w-[1060px] p-[20px]'>
         <div className="flex flex-col bg-white rounded-lg h-full">
           <div className='flex items-center border-b-2 p-4'>

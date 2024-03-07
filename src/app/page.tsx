@@ -1,6 +1,8 @@
 "use client"
 import Image from 'next/image'
 import Characters from "../../public/characters.json"
+import FeedbackForm from './components/FeedbackForm'
+import Header from './components/Header'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -14,9 +16,9 @@ export default function Home() {
       allLocalStorage = {...localStorage}
     }
   }, []);
-  const [hoverName, setHoverName] = useState<string | null>(null)
   const [password, setPassword] = useState<string>("")
   const [check, setCheck] = useState("checking")
+  const [viewFeedback, setViewFeedback] = useState<boolean>(false)
 
   const handleSelectedCharacter = (characterName: string) => {
     r.push(`/character?character=${characterName}`)
@@ -45,16 +47,10 @@ export default function Home() {
         </form>
       :
         <>
-          <div className='bg-white p-3 flex w-full justify-between'>
-            <h1 className='text-xl font-bold'>FictiChat</h1>
-            <div className='flex gap-2'>
-              <p>Feedback</p>
-              <p>Sign In</p>
-            </div>
-          </div>
-          
+          <Header setViewFeedback={setViewFeedback}/>
+          <FeedbackForm showFeedback={viewFeedback} closeFeedback={setViewFeedback}/>
           <div id="container" className='flex max-w-[1100px] gap-4 p-[20px]'>
-            <div className='w-2/4 overflow-y-auto flex flex-col gap-2'>
+            <div id="characters-section" className='w-2/4 overflow-y-auto flex flex-col gap-2'>
               {Characters.map((o, i) => {
                 var sectionName = Object.keys(o) as (keyof typeof o)[]
                 var charcterArray: any = o[sectionName[0]];
@@ -63,10 +59,9 @@ export default function Home() {
                     <h1 className='text-lg font-bold mb-3'>{Object.keys(o)}</h1>
                     <div className="whitespace-nowrap overflow-x-auto">
                     {charcterArray.map((character:string, index:number) => (
-                      <div key={index} onMouseOver={() => setHoverName(character)} onMouseLeave={() => setHoverName("")} onClick={()=>handleSelectedCharacter(character)} className="relative rounded-full max-w-[100px] inline-block mr-3 mb-[10px] cursor-pointer bg-[#D9F3EB] hover:bg-[#567C70]">
-                        <Image src={`/characters/${character}.png`} alt={character} width={100} height={100} className={`rounded-full object-cover w-[100px] h-[100px] ${hoverName == character ? "brightness-50" : ""}`} />
-                        {hoverName == character && 
-                        <p className={`absolute text-center text-white text-[13px] whitespace-break-spaces w-[100px] px-2 font-bold ${character.includes(' ') ? "top-[30%]" : "top-[40%]"}`}>
+                      <div key={index} onClick={()=>handleSelectedCharacter(character)} className="relative rounded-full max-w-[100px] inline-block mr-3 mb-[10px] cursor-pointer bg-[#D9F3EB]">
+                        <Image src={`/characters/${character}.png`} alt={character} width={100} height={100} className="rounded-full object-cover w-[100px] h-[100px]" />
+                        <p className={`absolute opacity-0 text-center flex justify-center items-center text-white text-[13px] whitespace-break-spaces w-[100px] h-[100px] rounded-full px-2 font-bold duration-200 hover:opacity-100 hover:bg-gray-950/50 top-0`}>
                           {character.split(' ').map((word, index) => {
                             if(index == 0){ 
                               return(
@@ -79,20 +74,20 @@ export default function Home() {
                               return `${word} `
                             }
                           })}
-                        </p>}
+                        </p>
                       </div>
                     ))}
                     </div>
                   </div>
                 )
               })}
-              </div>
-              <div className='flex flex-col w-2/4 bg-white p-3 rounded-md'>
+            </div>
+            <div id="messages-section" className='flex flex-col w-2/4 bg-white p-3 rounded-md'>
               <h1 className='text-lg font-bold mb-3'>Messages</h1>
               {Object.keys(allLocalStorage).length < 2 && 
                 <div className='h-full flex flex-col justify-center items-center p-2'>
                   <img src="/Conversation.svg" className='w-24 mb-4'/>
-                  <p>No messages yet, start the conversation!</p>
+                  <p className='text-center'>No messages yet, start the conversation!</p>
                 </div>
               }
               {Object.keys(allLocalStorage).map((o,i)=>{
