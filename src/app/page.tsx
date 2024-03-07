@@ -38,7 +38,7 @@ export default function Home() {
 
   return (
     <main className="flex h-screen max-h-screen flex-col items-center bg-slate-100">
-      {check !== "correct" ? 
+      {check == "correct" ? 
         <form onSubmit={(e)=>CheckPassword(e)} className="w-full h-screen flex flex-col items-center justify-center">
           <h1>Quien fue la razon porque te enamorastes con el papa?</h1>
           <input className="my-5" type="text" placeholder="Contraseña..." value={password} onChange={(e)=>setPassword(e.target.value)}></input>
@@ -60,15 +60,15 @@ export default function Home() {
                     <div className="whitespace-nowrap overflow-x-auto">
                     {charcterArray.map((character:string, index:number) => (
                       <div key={`${index} + ${i}`} onClick={()=>handleSelectedCharacter(character)} className="relative rounded-full max-w-[100px] inline-block mr-3 mb-[10px] cursor-pointer bg-[#D9F3EB]">
-                        <Image src={`/characters/${character}.png`} alt={character} width={100} height={100} className="rounded-full object-cover w-[100px] h-[100px]" />
+                        <Image src={`/characters/${character}.png`} alt={character} width={100} height={100} className="rounded-full object-cover w-[100px] h-[100px]" blurDataURL="https://i.pinimg.com/originals/d7/49/85/d749850e79c94f9a95906d0dfc392f4f.gif" placeholder="blur"/>
                         <p className={`absolute opacity-0 text-center flex justify-center items-center text-white text-[13px] whitespace-break-spaces w-[100px] h-[100px] rounded-full px-2 font-bold duration-200 hover:opacity-100 hover:bg-gray-950/50 top-0`}>
                           {character.split(' ').map((word, indexWord) => {
                             if(indexWord == 0){ 
                               return(
-                                <span key={`word:${indexWord}`}>
+                                <>
                                   {word}
                                   <br />
-                                </span>
+                                </>
                               )
                             } else {
                               return `${word} `
