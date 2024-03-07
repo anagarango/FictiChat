@@ -38,7 +38,7 @@ export default function Home() {
 
   return (
     <main className="flex h-screen max-h-screen flex-col items-center bg-slate-100">
-      {check == "correct" ? 
+      {check !== "correct" ? 
         <form onSubmit={(e)=>CheckPassword(e)} className="w-full h-screen flex flex-col items-center justify-center">
           <h1>Quien fue la razon porque te enamorastes con el papa?</h1>
           <input className="my-5" type="text" placeholder="Contraseña..." value={password} onChange={(e)=>setPassword(e.target.value)}></input>
