@@ -24,12 +24,18 @@
 }
 
 #container{
-  height: calc(100% - 65px);
+  height: calc(100% - 105px);
+}
+
+#cool{
+  height: calc(100% - 100px);
 }
 
 @media screen and (max-width:800px){
   #container{
    flex-direction: column;
+   align-items: start;
+   width: 100vw;
   }
 
   #characters-section{

@@ -60,10 +60,10 @@ export default function Character(characterName:Params) {
   }, [chat])
 
   return (
-    <main className="flex flex-col h-screen items-center bg-slate-100">
+    <main className="flex flex-col h-[100vh] items-center bg-slate-100">
       <Header setViewFeedback={setViewFeedback}/>
       <FeedbackForm showFeedback={viewFeedback} closeFeedback={setViewFeedback}/>
-      <div className='h-full w-full max-w-[1060px] p-[20px]'>
+      <div id="cool" className='w-full max-w-[1060px] p-[20px]'>
         <div className="flex flex-col bg-white rounded-lg h-full">
           <div className='flex items-center border-b-2 p-4'>
             <Image src="/return.png" alt="return button" width={70} height={70}  onClick={()=>r.push("/")} className="w-[20px] mr-5 cursor-pointer"/>

@@ -37,8 +37,8 @@ export default function Home() {
 
 
   return (
-    <main className="flex h-screen max-h-screen flex-col items-center bg-slate-100">
-      {check !== "correct" ? 
+    <main className="flex h-screen max-h-screen w-screen flex-col items-center bg-slate-100">
+      {check == "correct" ? 
         <form onSubmit={(e)=>CheckPassword(e)} className="w-full h-screen flex flex-col items-center justify-center">
           <h1>Quien fue la razon porque te enamorastes con el papa?</h1>
           <input className="my-5" type="text" placeholder="Contraseña..." value={password} onChange={(e)=>setPassword(e.target.value)}></input>
@@ -93,11 +93,11 @@ export default function Home() {
               {Object.keys(allLocalStorage).map((o,i)=>{
                   var lastMessageObject = JSON.parse(allLocalStorage[o])
                   return(
-                    <div key={i} onClick={()=>handleSelectedCharacter(o)} className='flex items-center border-b p-2 cursor-pointer hover:bg-slate-100'>
+                    <div key={i} onClick={()=>handleSelectedCharacter(o)} className='flex items-center w-full border-b p-2 cursor-pointer hover:bg-slate-100'>
                       <Image src={`/characters/${o}.png`} width={70} height={70} alt={o} className={`rounded-full object-cover min-w-[70px] w-[70px] h-[70px] bg-[#D9F3EB]`} />
                       <div className='pl-3 overflow-hidden'>
                         <h3 className='text-md font-bold'>{o}</h3>
-                        <p className='whitespace-nowrap overflow-hidden text-ellipsis'>{lastMessageObject[lastMessageObject.length - 1]?.message}</p>
+                        <p className='truncate'>{lastMessageObject[lastMessageObject.length - 1]?.message}</p>
                       </div>
                     </div>
                   )
