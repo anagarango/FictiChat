@@ -82,12 +82,12 @@ export default function Character(characterName:Params) {
               </div> 
             }
             {chat.map((o,i)=>(
-              <div id={`${o.user == "You" ? "user-textbubble" : "bot-textbubble" }`} key={i} className={`flex mb-3 p-[10px] max-w-[75%] ${o.user == "You" ? "self-end bg-[#97D8C4] w-fit rounded-tl-2xl rounded-br-2xl rounded-bl-2xl border border-[#87BFAE]" : "bg-[#D9D9D9] w-fit rounded-tr-2xl rounded-br-2xl rounded-bl-2xl border border-[#CACACA]"}`}>
+              <div id={`${o.user == "You" ? "user-textbubble" : "bot-textbubble" }`} key={`${i} character`} className={`flex mb-3 p-[10px] max-w-[75%] ${o.user == "You" ? "self-end bg-[#97D8C4] w-fit rounded-tl-2xl rounded-br-2xl rounded-bl-2xl border border-[#87BFAE]" : "bg-[#D9D9D9] w-fit rounded-tr-2xl rounded-br-2xl rounded-bl-2xl border border-[#CACACA]"}`}>
                 {o.user == "You" ? (<p>{o.message}</p>) 
                   :
                   <p className="typewriter">
                     {o.message.split(' ').map((letter, index) =>(
-                      <span key={index} style={{animationDelay: animation == o.message ? `${25 * index}ms` : "0ms", whiteSpace: "pre"}}>{letter} </span>
+                      <span key={`${index} word`} style={{animationDelay: animation == o.message ? `${25 * index}ms` : "0ms", whiteSpace: "pre"}}>{letter} </span>
                     ))}
                     
                   </p>

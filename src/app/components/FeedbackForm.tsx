@@ -39,8 +39,8 @@ export default function FeedbackForm({ showFeedback = false, closeFeedback = () 
   return (
     <>
       {showFeedback &&
-        <div className="w-screen h-screen absolute z-40 bg-gray-800/50 flex justify-center items-center">
-          <form action="/" onSubmit={(e) => submitForm(e)} className="bg-white p-5 rounded-lg w-5/6 max-w-[600px]">
+        <div id="feedback" className="w-screen h-screen absolute z-40 bg-gray-700/75 flex justify-center items-center">
+          <form  action="/" onSubmit={(e) => submitForm(e)} className="bg-white p-5 rounded-lg w-5/6 max-w-[600px]">
             <div>
               <h1 className='text-xl font-bold'>Got A Suggestion?</h1>
               <p className="py-4">Let me know if there are any well-known characters you&apos;d like to chat with (or if you encountered any bugs 🙈).</p>

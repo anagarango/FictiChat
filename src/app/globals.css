@@ -51,15 +51,47 @@
   }
 }
 
+@media screen and (max-width:500px) {
+  #main{
+    height: calc(100vh - 100px);
+  }
+
+  #container{
+    height: calc(100% - 60px);
+  }
+  
+  #cool{
+    height: calc(100% - 60px);
+  }
+
+  #feedback{
+    height: 100%;
+  }
+}
+
 .dark #main, .light #main {
-  transition: 0.4s ease;
+  transition: all 0.3s ease;
+}
+
+html{
+  background-color: #F1F5F9;
+}
+
+html.dark, .dark main {
+  background-color: rgb(30 41 59) !important;
+  color: white;
+}
+
+.dark {
+  color: white;
 }
 
 .dark #main {
   background-color: rgb(30 41 59);
   color: white;
 }
-.dark #header, .dark #characters, .dark #messages-section{
+
+.dark #header, .dark #characters, .dark #messages-section, .dark #feedback form{
   background-color: rgb(15 23 42);
 }
 .dark #messages-kept img, .dark #messages-kept:hover {
@@ -68,7 +100,7 @@
 .dark #character-background, .dark #messages-kept:hover{
   background-color: rgb(51 65 85);
 }
-.dark #characters-border{
+.dark #characters-border, .dark #messages-kept{
   border-color: rgb(2 6 23);
 }
 .dark #user-textbubble{
@@ -77,16 +109,16 @@
 .dark #bot-textbubble{
   background-color: #5A5E69
 }
-.dark #form {
+.dark #form, .dark #feedback input, .dark #feedback textarea {
   background-color: #287B62;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   html, #main {
-    background-color: rgb(30 41 59);
+    background-color: rgb(30 41 59) !important;
     color: white;
   }
-  #header, #characters, #messages-section{
+  #header, #characters, #messages-section, #feedbackk{
     background-color: rgb(15 23 42);
   }
 
@@ -113,11 +145,11 @@
   #form {
     background-color: #287B62;
   }
-}
+} */
 
-@media (prefers-color-scheme: light) {
-  html{
-    --tw-bg-opacity: 1;
-  background-color: rgb(241 245 249 / var(--tw-bg-opacity));
+/* @media (prefers-color-scheme: light) {
+  html, #main {
+    background-color: #F1F5F9;
+    color: black;
   }
-}
+} */
