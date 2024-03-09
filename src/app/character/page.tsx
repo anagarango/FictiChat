@@ -60,12 +60,12 @@ export default function Character(characterName:Params) {
   }, [chat])
 
   return (
-    <main className="flex flex-col h-[100vh] items-center bg-slate-100">
+    <main id="main" className="flex flex-col h-[100vh] items-center bg-slate-100">
       <Header setViewFeedback={setViewFeedback}/>
       <FeedbackForm showFeedback={viewFeedback} closeFeedback={setViewFeedback}/>
       <div id="cool" className='w-full max-w-[1060px] p-[20px]'>
-        <div className="flex flex-col bg-white rounded-lg h-full">
-          <div className='flex items-center border-b-2 p-4'>
+        <div id="characters" className="flex flex-col bg-white rounded-lg h-full">
+          <div id="characters-border" className='flex items-center border-b-2 p-4'>
             <Image src="/return.png" alt="return button" width={70} height={70}  onClick={()=>r.push("/")} className="w-[20px] mr-5 cursor-pointer"/>
             <div className="relative rounded-full max-w-[50px] inline-block bg-[#D9F3EB]">
               <Image src={`/characters/${character}.png`} alt={`${character} image`} width={70} height={70}  className="rounded-full object-cover w-[50px] h-[50px]"/>
@@ -75,14 +75,14 @@ export default function Character(characterName:Params) {
           
           <div className='flex flex-col p-5 overflow-y-scroll overflow-x-hidden h-full'>
             {chat.length < 1 && <div className='flex h-full justify-center items-center flex-col'>
-                <div className="relative rounded-full max-w-[100px] max-h-[100px] inline-block bg-[#D9F3EB]">
+                <div id="character-background" className="relative rounded-full max-w-[100px] max-h-[100px] inline-block bg-[#D9F3EB]">
                   <Image src={`/characters/${character}.png`} alt={`${character} image`} width={70} height={70}  className="rounded-full object-cover w-[100px] h-[100px]"/>
                 </div>
                 <h2 className='font-bold text-xl pt-4'>Start a chat with me!</h2>
               </div> 
             }
             {chat.map((o,i)=>(
-              <div key={i} className={`flex mb-3 p-[10px] max-w-[75%] ${o.user == "You" ? "self-end bg-[#97D8C4] w-fit rounded-tl-2xl rounded-br-2xl rounded-bl-2xl border border-[#87BFAE]" : "bg-[#D9D9D9] w-fit rounded-tr-2xl rounded-br-2xl rounded-bl-2xl border border-[#CACACA]"}`}>
+              <div id={`${o.user == "You" ? "user-textbubble" : "bot-textbubble" }`} key={i} className={`flex mb-3 p-[10px] max-w-[75%] ${o.user == "You" ? "self-end bg-[#97D8C4] w-fit rounded-tl-2xl rounded-br-2xl rounded-bl-2xl border border-[#87BFAE]" : "bg-[#D9D9D9] w-fit rounded-tr-2xl rounded-br-2xl rounded-bl-2xl border border-[#CACACA]"}`}>
                 {o.user == "You" ? (<p>{o.message}</p>) 
                   :
                   <p className="typewriter">
@@ -95,8 +95,8 @@ export default function Character(characterName:Params) {
               </div>
             ))}
           </div>
-          <form onSubmit={(e)=>handleResponses(e, message, character)} className="flex m-4 bg-[#D9F3EB] py-3 px-5 rounded-md justify-between border border-[#97D8C4]">
-            <input type="text" placeholder={`Chat with ${character}...`} value={message} onChange={(e)=>{setMessage(e.target.value)}} className="outline-none  bg-[#D9F3EB] w-10/12"/>
+          <form id="form" onSubmit={(e)=>handleResponses(e, message, character)} className="flex m-4 bg-[#D9F3EB] py-3 px-5 rounded-md justify-between border border-[#97D8C4]">
+            <input type="text" placeholder={`Chat with ${character}...`} value={message} onChange={(e)=>{setMessage(e.target.value)}} className="outline-none  bg-transparent w-10/12"/>
             <button type="submit" onClick={()=>{if(message){setChat([...chat, {"user":"You", "message":message, "role":"user"}])}}}>
               <Image width={70} height={70}  alt={loading ? "loading gif" : "send.gif"} src={loading ? "/loading.gif" : "/arrow.png"} className='w-4'/>
             </button>
