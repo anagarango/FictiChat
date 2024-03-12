@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       subject: `Fictichat feedback from ${requestData.email}`,
       html: `<p>Email: ${requestData.email}</p> <p>Message: ${requestData.message}</p>`
     });
-    console.log(JSON.stringify(result, null, 4))
+    // console.log(JSON.stringify(result, null, 4))
     return NextResponse.json({ message: `Success: Feedback has been sent!` }, { status: 200 })
   } catch (error) {
     console.log(error)

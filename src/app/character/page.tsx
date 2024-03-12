@@ -7,7 +7,8 @@ import FeedbackForm from '../components/FeedbackForm'
 import axios from "axios"
 
 interface SearchParams {
-  character:string
+  character:string,
+  user:string
 }
 
 interface Params {
@@ -22,23 +23,24 @@ interface ChatObject {
 }
 
 export default function Character(characterName:Params) {
-  const r = useRouter()
-
-  const character:string = characterName.searchParams.character || ""
-  const storedChat = localStorage.getItem(character);
-  const [chat, setChat] = useState<ChatObject[]>(storedChat ? JSON.parse(storedChat) : [])
-  const [message, setMessage] = useState<string>("")
-  const [loading, setLoading] = useState<boolean>(false)
-  const [animation, setAnimation] = useState<string>("")
-  const [viewFeedback, setViewFeedback] = useState<boolean>(false)
+  const r = useRouter();
+  const character:string = characterName.searchParams.character;
+  const user:string = characterName.searchParams.user;
+  const [currentUserId, setCurrentUserId] = useState<string>(user);
+  const [chat, setChat] = useState<ChatObject[]>([]);
+  const [message, setMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [animation, setAnimation] = useState<string>("");
+  const [viewModal, setViewModal] = useState<string>("");
 
   const handleResponses = async (e:any, mess:string, char:string) => {
     e.preventDefault()
+    setLoading(true)
+    setMessage("")
     if(!mess){
       return
     }
-    setLoading(true)
-    setMessage("")
+
     const response =  await axios({
       method:'post',
       url: `/api/character?character=${char}`,
@@ -48,21 +50,53 @@ export default function Character(characterName:Params) {
       }
     });
     const messageData = await response.data
+
+    if(chat.length < 2){
+      await axios({
+        method:'post',
+        url: `/api/mysql/chat?currentUserId=${currentUserId}&character=${char}`,
+        data:{
+          context: [...chat, {"user":character, "message":messageData.message, "role":"assistant"}]
+        }
+      });
+    } else {
+      await axios({
+        method:'put',
+        url: `/api/mysql/chat?currentUserId=${currentUserId}&character=${char}`,
+        data:{
+          context: [...chat, {"user":character, "message":messageData.message, "role":"assistant"}]
+        }
+      });
+    }
+
     setAnimation(messageData.message)
     setChat([...chat, {"user":character, "message":messageData.message, "role":"assistant"}])
     setLoading(false)
   }
 
   useEffect(() => {
-    if(chat.length > 1){
-      localStorage.setItem(character, JSON.stringify(chat))
-    }
-  }, [chat])
+    const fetchChatData = async () => {
+      try {
+        const response = await axios({
+          method: 'get',
+          url: `/api/mysql/chat?currentUserId=${currentUserId}&character=${character}`,
+        });
+        const messageData = await response.data
+        if(messageData){
+          setChat(JSON.parse(messageData.messages))
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    };
+  
+    fetchChatData();
+  }, [])
 
   return (
     <main id="main" className="flex flex-col h-[100vh] items-center bg-slate-100">
-      <Header setViewFeedback={setViewFeedback}/>
-      <FeedbackForm showFeedback={viewFeedback} closeFeedback={setViewFeedback}/>
+      <Header setViewModal={setViewModal} currentUserId={currentUserId}/>
+      <FeedbackForm showModal={viewModal} closeFeedback={setViewModal}/>
       <div id="cool" className='w-full max-w-[1060px] p-[20px]'>
         <div id="characters" className="flex flex-col bg-white rounded-lg h-full">
           <div id="characters-border" className='flex items-center border-b-2 p-4'>

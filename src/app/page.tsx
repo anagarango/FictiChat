@@ -3,38 +3,64 @@ import Image from 'next/image'
 import Characters from "../../public/characters.json"
 import FeedbackForm from './components/FeedbackForm'
 import Header from './components/Header'
-import { useEffect, useState } from 'react'
+import LogIn from './components/LogIn'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+
+interface SessionStorage {
+  id:number,
+  username:string,
+  password:string,
+  createdAt:string,
+  email:string
+}
 
 export default function Home() {
   const r = useRouter()
-  const allStrings = Characters.flatMap(obj => Object.values(obj).flat());
+
+  useEffect(() => {
+    const fetchChatData = async () => {
+      try {
+        if (window.sessionStorage.length > 0) {
+          const storedSessionStorage = { ...sessionStorage };
+          const parsedData = JSON.parse(storedSessionStorage[1]);
+          setCurrentUserId(parsedData);
+
+          const response = await axios({
+            method: 'get',
+            url: `/api/mysql/chat/home?currentUserId=${parsedData.id}`,
+          });
+          const messageData = await response.data
+          if(messageData.length != 0){
+            setCurrentUserIdSavedChats(messageData)
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    };
+  
+    fetchChatData();
+  }, []);
   
   
-  const [allLocalStorage, setAllLocalStorage] = useState<any>({});
+  
+  const [currentUserId, setCurrentUserId] = useState<SessionStorage | null>(null);
+  const [currentUserIdSavedChats, setCurrentUserIdSavedChats] = useState<any>([]);
   const [password, setPassword] = useState<string>("")
   const [check, setCheck] = useState("checking")
-  const [viewFeedback, setViewFeedback] = useState<boolean>(false)
-  const [numberSavedLocalStorage, setNumberSavedLocalStorage] = useState<number>(0)
+  const [viewModal, setViewModal] = useState<string>("")
 
-  useEffect(() => {
-    if (window.localStorage) {
-      setAllLocalStorage({...localStorage})
-    }
-  }, []);
 
-  useEffect(() => {
-    var count = 0;
-    Object.keys(allLocalStorage).forEach(o => {
-      if (allStrings.includes(o)) {
-        count++;
-      }
-    });
-    setNumberSavedLocalStorage(count);
-  }, [allLocalStorage, allStrings]);
+
 
   const handleSelectedCharacter = (characterName: string) => {
-    r.push(`/character?character=${characterName}`)
+    if(currentUserId){
+      r.push(`/character?character=${characterName}&user=${currentUserId?.id}`)
+    } else {
+      setViewModal("login")
+    }
   }
 
   const CheckPassword = async (e:any) => {
@@ -48,10 +74,14 @@ export default function Home() {
     }
   }
 
+  const GrabAllUsersChats = async (e:SessionStorage) =>{
+    setCurrentUserId(e)
+    sessionStorage.getItem(String(e.id))
+  }
 
   return (
     <main id="main" className="flex h-screen max-h-screen w-screen flex-col items-center bg-slate-100">
-      {check !== "correct" ? 
+      {check == "correct" ? 
         <form onSubmit={(e)=>CheckPassword(e)} className="w-full h-screen flex flex-col items-center justify-center">
           <h1>Quien fue la razon porque te enamorastes con el papa?</h1>
           <input className="my-5" type="text" placeholder="Contraseña..." value={password} onChange={(e)=>setPassword(e.target.value)}></input>
@@ -60,8 +90,9 @@ export default function Home() {
         </form>
       :
         <>
-          <Header setViewFeedback={setViewFeedback}/>
-          <FeedbackForm showFeedback={viewFeedback} closeFeedback={setViewFeedback}/>
+          <Header setViewModal={setViewModal} currentUserId={currentUserId} />
+          <FeedbackForm showModal={viewModal} closeFeedback={setViewModal}/>
+          <LogIn showModal={viewModal} closeFeedback={setViewModal} currentUserId={(e:SessionStorage)=>GrabAllUsersChats(e)}/>
           <div id="container" className='flex max-w-[1100px] gap-4 p-[20px]'>
             <div id="characters-section" className='w-2/4 overflow-y-auto flex flex-col gap-2'>
               {Characters.map((o, i) => {
@@ -78,10 +109,10 @@ export default function Home() {
                           {character.split(' ').map((word, indexWord) => {
                             if(indexWord == 0){ 
                               return(
-                                <>
-                                  {word}
-                                  <br />
-                                </>
+                                <React.Fragment key={indexWord}>
+                                    {word}
+                                    <br />
+                                </React.Fragment>
                               )
                             } else {
                               return `${word} `
@@ -97,32 +128,25 @@ export default function Home() {
             </div>
             <div id="messages-section" className='flex flex-col w-2/4 bg-white p-3 rounded-md'>
               <h1 className='text-lg font-bold mb-3'>Messages</h1>
-              {numberSavedLocalStorage < 1 && 
+              {currentUserIdSavedChats.length < 1 && 
                 <div className='h-full flex flex-col justify-center items-center p-2'>
-                  <Image src="/Conversation.svg" height={96} width={96} alt="text bubbles" className='w-24 mb-4'/>
+                  <Image src="/Conversation.svg" height={96} width={96} alt="text bubbles" className='w-1/4 mb-4'/>
                   <p className='text-center'>No messages yet, start the conversation!</p>
                 </div>
               }
               <div className='overflow-y-auto'>
-                {Object.keys(allLocalStorage).map((o, i) => {
-                  try {
-                    var lastMessageObject = JSON.parse(allLocalStorage[o]);
-                  } catch (error) {
-                    console.error('Error parsing JSON:', error);
-                  }
-                  if (allStrings.includes(o)) {
+                {currentUserIdSavedChats.map((o:any, i:number) => {
+                  var messages = JSON.parse(o.messages)
                     return (
-                      <div id="messages-kept" key={`message ${i}`} onClick={() => handleSelectedCharacter(o)} className='flex items-center w-full border-b p-2 cursor-pointer hover:bg-slate-100'>
-                        <Image src={`/characters/${o}.png`} width={70} height={70} alt={o} className={`rounded-full object-cover min-w-[70px] w-[70px] h-[70px]`} />
+                      <div id="messages-kept" key={`message ${i}`} onClick={() => handleSelectedCharacter(o.character_name)} className='flex items-center w-full border-b p-2 cursor-pointer hover:bg-slate-100'>
+                        <Image src={`/characters/${o.character_name}.png`} width={70} height={70} alt={o.character_name} className={`rounded-full object-cover min-w-[70px] w-[70px] h-[70px]`} />
                         <div className='pl-3 overflow-hidden'>
-                          <h3 className='text-md font-bold'>{o}</h3>
-                          <p className='truncate'>{lastMessageObject[lastMessageObject.length - 1]?.message}</p>
+                          <h3 className='text-md font-bold'>{o.character_name}</h3>
+                          <p className='truncate'>{messages[messages.length - 1].message}</p>
                         </div>
                       </div>
                     );
-                  }
-                  return
-                })}
+                  })}
                 </div>
               </div>
             </div>
