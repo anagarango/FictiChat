@@ -7,13 +7,4 @@ const connection = mysql.createConnection({
   port: process.env.MYSQLPORT
 });
 
-connection.connect(function (err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
-
-connection.query("SELECT 1+1").on("result", function (row) {
-  console.log(row);
-});
-
 export default connection;

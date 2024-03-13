@@ -57,7 +57,7 @@ export default function Home() {
 
   const handleSelectedCharacter = (characterName: string) => {
     if(currentUserId){
-      r.push(`/character?character=${characterName}&user=${currentUserId?.id}`)
+      r.push(`/character?character=${characterName}&user=${currentUserId.id}`)
     } else {
       setViewModal("login")
     }

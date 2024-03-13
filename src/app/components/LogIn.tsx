@@ -42,6 +42,7 @@ export default function LogIn({showModal, closeFeedback = () => {}, currentUserI
     }
   
     const messageData = await response.data;
+    console.log(messageData.message)
   
     if (messageData.message) {
       setWarning(messageData.message);
@@ -51,7 +52,7 @@ export default function LogIn({showModal, closeFeedback = () => {}, currentUserI
       setWarning("hello");
       closeFeedback(false);
       // Refresh the page after submitting the form
-      window.location.reload();
+      // window.location.reload();
     }
   
     emailRef.current!.value = "";
