@@ -2,7 +2,7 @@ import { useState, useRef, use } from "react";
 import Image from "next/image";
 import axios from "axios";
 
-export default function LogIn({showModal, closeFeedback = () => {}, currentUserId = () => {} }: { showModal: string; closeFeedback: Function, currentUserId: Function }){
+export default function LogIn({showModal, closeFeedback = () => {}, currentUserId = () => {} }: { showModal: string; closeFeedback?: Function, currentUserId?: Function }){
   const emailRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -47,7 +47,7 @@ export default function LogIn({showModal, closeFeedback = () => {}, currentUserI
     if (messageData.message) {
       setWarning(messageData.message);
     } else {
-      sessionStorage.setItem(messageData.id, JSON.stringify(messageData));
+      sessionStorage.setItem("currentUser", JSON.stringify(messageData));
       currentUserId(messageData);
       setWarning("hello");
       closeFeedback(false);

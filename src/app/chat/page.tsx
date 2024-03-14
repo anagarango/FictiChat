@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Header from '../components/Header'
 import FeedbackForm from '../components/FeedbackForm'
 import axios from "axios"
+import Alert from '../components/Alert'
 
 interface SearchParams {
   character:string,
@@ -22,25 +23,38 @@ interface ChatObject {
   role:string
 }
 
-export default function Character(characterName:Params) {
+interface SessionStorage {
+  id:number,
+  username:string,
+  password:string,
+  createdAt:string,
+  email:string
+}
+
+export default function Chat(characterName:Params) {
   const r = useRouter();
   const character:string = characterName.searchParams.character;
-  const user:string = characterName.searchParams.user;
-  const [currentUserId, setCurrentUserId] = useState<string>(user);
+  const [currentUserId, setCurrentUserId] = useState<SessionStorage>();
   const [chat, setChat] = useState<ChatObject[]>([]);
   const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [animation, setAnimation] = useState<string>("");
-  const [viewModal, setViewModal] = useState<string>("");
+  const [alert, setAlert] = useState<boolean>(false);
 
   const handleResponses = async (e:any, mess:string, char:string) => {
     e.preventDefault()
     setLoading(true)
     setMessage("")
-    if(!mess){
+
+    if(!currentUserId ){
+      setAlert(true)
+      setLoading(false)
       return
     }
 
+    if(!mess){
+      return
+    }
     const response =  await axios({
       method:'post',
       url: `/api/character?character=${char}`,
@@ -54,7 +68,7 @@ export default function Character(characterName:Params) {
     if(chat.length < 2){
       await axios({
         method:'post',
-        url: `/api/mysql/chat?currentUserId=${currentUserId}&character=${char}`,
+        url: `/api/mysql/chat?currentUserId=${currentUserId?.id || ''}&character=${char}`,
         data:{
           context: [...chat, {"user":character, "message":messageData.message, "role":"assistant"}]
         }
@@ -62,7 +76,7 @@ export default function Character(characterName:Params) {
     } else {
       await axios({
         method:'put',
-        url: `/api/mysql/chat?currentUserId=${currentUserId}&character=${char}`,
+        url: `/api/mysql/chat?currentUserId=${currentUserId?.id || ''}&character=${char}`,
         data:{
           context: [...chat, {"user":character, "message":messageData.message, "role":"assistant"}]
         }
@@ -77,13 +91,19 @@ export default function Character(characterName:Params) {
   useEffect(() => {
     const fetchChatData = async () => {
       try {
-        const response = await axios({
-          method: 'get',
-          url: `/api/mysql/chat?currentUserId=${currentUserId}&character=${character}`,
-        });
-        const messageData = await response.data
-        if(messageData){
-          setChat(JSON.parse(messageData.messages))
+        const storedData = sessionStorage.getItem("currentUser");
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          setCurrentUserId(parsedData);
+  
+          const response = await axios({
+            method: 'get',
+            url: `/api/mysql/chat?currentUserId=${parsedData.id || ''}&character=${character}`,
+          });
+          const messageData = await response.data
+          if(messageData){
+            setChat(JSON.parse(messageData.messages))
+          }
         }
       } catch (error) {
         console.log(error)
@@ -95,12 +115,12 @@ export default function Character(characterName:Params) {
 
   return (
     <main id="main" className="flex flex-col h-[100vh] items-center bg-slate-100">
-      <Header setViewModal={setViewModal} currentUserId={currentUserId}/>
-      <FeedbackForm showModal={viewModal} closeFeedback={setViewModal}/>
+      <Header currentUserId={currentUserId ?  currentUserId : ""} setCurrentUserId={(e:SessionStorage) => setCurrentUserId(e)}/>
+      <Alert showModal={alert} closeFeedback={setAlert}/>
       <div id="cool" className='w-full max-w-[1060px] p-[20px]'>
         <div id="characters" className="flex flex-col bg-white rounded-lg h-full">
           <div id="characters-border" className='flex items-center border-b-2 p-4'>
-            <Image src="/return.png" alt="return button" width={70} height={70}  onClick={()=>r.push("/")} className="w-[20px] mr-5 cursor-pointer"/>
+            <Image src="/return.png" alt="return button" width={70} height={70}  onClick={()=>r.push("/characters")} className="w-[20px] mr-5 cursor-pointer"/>
             <div className="relative rounded-full max-w-[50px] inline-block bg-[#D9F3EB]">
               <Image src={`/characters/${character}.png`} alt={`${character} image`} width={70} height={70}  className="rounded-full object-cover w-[50px] h-[50px]"/>
             </div>
@@ -131,8 +151,8 @@ export default function Character(characterName:Params) {
           </div>
           <form id="form" onSubmit={(e)=>handleResponses(e, message, character)} className="flex m-4 bg-[#D9F3EB] py-3 px-5 rounded-md justify-between border border-[#97D8C4]">
             <input type="text" placeholder={`Chat with ${character}...`} value={message} onChange={(e)=>{setMessage(e.target.value)}} className="outline-none  bg-transparent w-10/12"/>
-            <button type="submit" onClick={()=>{if(message){setChat([...chat, {"user":"You", "message":message, "role":"user"}])}}}>
-              <Image width={70} height={70}  alt={loading ? "loading gif" : "send.gif"} src={loading ? "/loading.gif" : "/arrow.png"} className='w-4'/>
+            <button type="submit" onClick={()=>{if(message && currentUserId){setChat([...chat, {"user":"You", "message":message, "role":"user"}])}}}>
+              <Image width={70} height={70}  alt={loading ? "loading gif" : "send.gif"} src={loading ? "/loading.gif" : "/arrow.png"} className={loading ? "w-6" : "w-4"}/>
             </button>
           </form>
         </div>
