@@ -94,7 +94,7 @@ html.dark, .dark main {
 .dark #header, .dark #characters, .dark #messages-section, .dark #feedback form{
   background-color: rgb(15 23 42);
 }
-.dark #messages-kept img, .dark #messages-kept:hover {
+.dark #messages-kept img:first-child, .dark #messages-kept:hover {
   background-color: rgb(71 85 105);
 }
 .dark #character-background, .dark #messages-kept:hover{

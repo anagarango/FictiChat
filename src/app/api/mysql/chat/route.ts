@@ -36,7 +36,6 @@ export async function POST(request: NextRequest) {
     
     // Pass an array of values as the second argument
     const result = await connectionInstance.query("INSERT INTO chat (user_id, character_name, messages) VALUES (?, ?, ?)", [currentUserId, character, chat]);
-    console.log(currentUserId)
     return NextResponse.json({ message: `Chat sent from ${currentUserId}`});
   } catch (error:any) {
     console.log(error);
