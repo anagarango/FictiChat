@@ -91,27 +91,24 @@ export default function Chat(characterName:Params) {
   useEffect(() => {
     const fetchChatData = async () => {
       try {
-        const storedData = sessionStorage.getItem("currentUser");
-        if (storedData) {
-          const parsedData = JSON.parse(storedData);
-          setCurrentUserId(parsedData);
-  
+        if (currentUserId){
           const response = await axios({
             method: 'get',
-            url: `/api/mysql/chat?currentUserId=${parsedData.id || ''}&character=${character}`,
+            url: `/api/mysql/chat?currentUserId=${currentUserId.id || ''}&character=${character}`,
           });
           const messageData = await response.data
           if(messageData){
             setChat(JSON.parse(messageData.messages))
           }
         }
+        
       } catch (error) {
         console.log(error)
       }
     };
   
     fetchChatData();
-  }, [])
+  }, [currentUserId])
 
   return (
     <main id="main" className="flex flex-col h-[100vh] items-center bg-slate-100">

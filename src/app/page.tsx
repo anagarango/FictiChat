@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Header from './components/Header'
 
@@ -13,23 +13,6 @@ interface SessionStorage {
 
 export default function Home() {
   const r = useRouter()
-
-  useEffect(() => {
-    const fetchChatData = async () => {
-      try {
-        const storedData = sessionStorage.getItem("currentUser");
-        if (storedData) {
-          const parsedData = JSON.parse(storedData);
-          setCurrentUserId(parsedData);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  
-    fetchChatData();
-  }, []);
-
   const [currentUserId, setCurrentUserId] = useState<SessionStorage | null>(null);
   
 

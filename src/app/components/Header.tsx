@@ -19,7 +19,7 @@ export default function Header({currentUserId, setCurrentUserId=()=>{}}:{current
 
   const { resolvedTheme, setTheme } = useTheme()
   const [switchTheme, setSwitchTheme] = useState<string | undefined>("")
-  const [currentPage, setCurrentPage] = useState<string>(localStorage?.getItem("page") || "/")
+  const [currentPage, setCurrentPage] = useState<string>()
   const [viewModal, setViewModal] = useState<string>("")
 
   useEffect(() => {
@@ -27,9 +27,36 @@ export default function Header({currentUserId, setCurrentUserId=()=>{}}:{current
   }, [resolvedTheme])
 
   useEffect(() => {
-    if(!currentUserId && p == "/chat"){
-      setViewModal("login")
-    }
+    const fetchCurrentUser = async () => {
+      try {
+        const storedUser = sessionStorage.getItem("currentUser");
+        if (storedUser) {
+          setCurrentUserId(JSON.parse(storedUser));
+
+        }
+        if(!storedUser && p == "/chat"){
+          setViewModal("login")
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    };
+
+    const fetchCurrentPage = async () => {
+      try {
+        const storedPage = localStorage.getItem("page");
+        if (storedPage) {
+          setCurrentPage(storedPage);
+        } else {
+          setCurrentPage("/")
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    };
+  
+    fetchCurrentUser();
+    fetchCurrentPage();
   }, [])
 
   const toggleTheme = () => {
@@ -44,8 +71,12 @@ export default function Header({currentUserId, setCurrentUserId=()=>{}}:{current
 
   const logOut = () => {
     sessionStorage.removeItem("currentUser")
-    localStorage.setItem("page", "/");
-    r.push("/")
+    if(p == "/chat"){
+      localStorage.setItem("page", "/");
+      r.push("/")
+    } else {
+      window.location.reload();
+    }
   }
 
   const GrabAllUsersChats = async (e:SessionStorage) =>{
@@ -55,6 +86,7 @@ export default function Header({currentUserId, setCurrentUserId=()=>{}}:{current
 
   const handleCurrentPage = (page:string) => {
     localStorage.setItem("page", page);
+    setCurrentPage(page)
     r.push(page)
   }
 

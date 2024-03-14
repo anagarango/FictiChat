@@ -16,36 +16,9 @@ interface SessionStorage {
 
 export default function Character() {
   const r = useRouter()
-
-  useEffect(() => {
-    const fetchChatData = async () => {
-      try {
-        const storedData = sessionStorage.getItem("currentUser");
-        if (storedData) {
-          const parsedData = JSON.parse(storedData);
-          setCurrentUserId(parsedData);
-  
-          const response = await axios({
-            method: 'get',
-            url: `/api/mysql/chat/home?currentUserId=${parsedData.id}`,
-          });
-          const messageData = await response.data;
-          if (messageData.length !== 0) {
-            setCurrentUserIdSavedChats(messageData);
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  
-    fetchChatData();
-  }, []);
   
   const [currentUserId, setCurrentUserId] = useState<SessionStorage>();
   const [currentUserIdSavedChats, setCurrentUserIdSavedChats] = useState<any>([]);
-  const [password, setPassword] = useState<string>("")
-  const [check, setCheck] = useState("checking")
 
 
   const handleSelectedCharacter = (characterName: string) => {
@@ -69,16 +42,26 @@ export default function Character() {
     }
   }
 
-  const CheckPassword = async (e:any) => {
-    e.preventDefault()
-    const res = await fetch(`/api/password?pass=${password}`)
-    const passwordCheck = await res.json()
-    if(passwordCheck.password == "correct"){
-      setCheck("correct")
-    } else {
-      setCheck("wrong")
-    }
-  }
+  useEffect(() => {
+    const fetchChatData = async () => {
+      try {
+        if (currentUserId){
+          const response = await axios({
+            method: 'get',
+            url: `/api/mysql/chat/home?currentUserId=${currentUserId.id}`,
+          });
+          const messageData = await response.data;
+          if (messageData.length !== 0) {
+            setCurrentUserIdSavedChats(messageData);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchChatData();
+  }, [currentUserId]);
 
   return (
     <main id="main" className="flex h-screen max-h-screen w-screen flex-col items-center bg-slate-100">
