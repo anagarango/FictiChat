@@ -114,7 +114,7 @@ export default function Chat(characterName:Params) {
     <main id="main" className="flex flex-col h-[100vh] items-center bg-slate-100">
       <Header currentUserId={currentUserId ?  currentUserId : ""} setCurrentUserId={(e:SessionStorage) => setCurrentUserId(e)}/>
       <Alert showModal={alert} closeFeedback={setAlert}/>
-      <div id="cool" className='w-full max-w-[1060px] p-[20px]'>
+      <div id="cool" className='w-full max-w-[900px] p-[20px]'>
         <div id="characters" className="flex flex-col bg-white rounded-lg h-full">
           <div id="characters-border" className='flex items-center border-b-2 p-4'>
             <Image src="/return.png" alt="return button" width={70} height={70}  onClick={()=>r.push("/characters")} className="w-[20px] mr-5 cursor-pointer"/>

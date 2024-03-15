@@ -18,15 +18,15 @@ export async function POST(request: NextRequest) {
       content: message
     }));
 
-    // const completion = await openai.chat.completions.create({
-    //   messages: [
-    //     { role: 'system', content: `I want you to respond and answer like ${character} using the tone, manner and vocabulary ${character} would use. You must know all of the knowledge of ${character}. Answer logically to whats been asked to you.` },
-    //     ...formattedConversation,
-    //   ],
-    //   model: 'gpt-3.5-turbo',
-    // });
+    const completion = await openai.chat.completions.create({
+      messages: [
+        { role: 'system', content: `I want you to respond and answer like ${character} using the tone, manner and vocabulary ${character} would use. You must know all of the knowledge of ${character}. Answer logically to whats been asked to you.` },
+        ...formattedConversation,
+      ],
+      model: 'gpt-3.5-turbo',
+    });
 
-    return NextResponse.json({ message: "Hey Ana, how are you?" }, { status: 200 })
+    return NextResponse.json({ message: completion.choices[0].message.content}, { status: 200 })
   } catch (error) {
     console.error('Error processing request:', error);
     return NextResponse.error();
