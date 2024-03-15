@@ -66,7 +66,7 @@ export default function Character() {
   return (
     <main id="main" className="flex h-screen max-h-screen w-screen flex-col items-center bg-slate-100">
       <Header currentUserId={currentUserId ?  currentUserId : ""} setCurrentUserId={(e:SessionStorage) => setCurrentUserId(e)}/>
-      <div id="container" className='flex max-w-[1100px] gap-4 p-[20px]'>
+      <div id="container" className='flex max-w-[900px] gap-4 p-[20px]'>
         <div id="characters-section" className='w-2/4 overflow-y-auto flex flex-col gap-2'>
           {Characters.map((o, i) => {
             var sectionName = Object.keys(o) as (keyof typeof o)[]

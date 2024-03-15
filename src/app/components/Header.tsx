@@ -95,8 +95,8 @@ export default function Header({currentUserId, setCurrentUserId=()=>{}}:{current
     <div id="header" className='bg-white p-3 flex w-full justify-between items-center'>
       <div className='flex gap-4 items-center'>
         <Image alt="fictichat logo" width={100} height={100} onClick={()=>handleCurrentPage("/")} className='w-32 cursor-pointer' src="/fictichat.svg"/>
-        <p className={`cursor-pointer ${currentPage == "/" ? "text-[#50A98D] underline" : ""}`} onClick={()=>handleCurrentPage("/")}>Home</p>
-        <p className={`cursor-pointer ${currentPage == "/characters" ? "text-[#50A98D] underline" : ""}`} onClick={()=>handleCurrentPage("/characters")}>Characters</p>
+        <p className={`cursor-pointer font-bold ${currentPage == "/" ? "text-[#50A98D]" : ""}`} onClick={()=>handleCurrentPage("/")}>Home</p>
+        <p className={`cursor-pointer font-bold ${currentPage == "/characters" ? "text-[#50A98D]" : ""}`} onClick={()=>handleCurrentPage("/characters")}>Characters</p>
       </div>
       
       <div className='flex gap-4 items-center'>
