@@ -33,6 +33,14 @@
   height: calc(100% - 100px);
 }
 
+#header-desktop{
+  display: flex;
+}
+
+#header-mobile{
+  display: none;
+}
+
 @media screen and (max-width:800px){
   #container{
    flex-direction: column;
@@ -51,7 +59,7 @@
   }
 }
 
-@media screen and (max-width:500px) {
+@media screen and (max-width:600px) {
   #main{
     height: calc(100vh - 100px);
   }
@@ -67,6 +75,14 @@
   #feedback{
     height: 100%;
   }
+
+  #header-desktop{
+    display: none;
+  }
+  
+  #header-mobile{
+    display: block;
+  }
 }
 
 /* .dark #main, .light #main {
@@ -75,20 +91,13 @@
 
 html{
   background-color: #F1F5F9;
+  overflow-x: hidden;
 }
 
 html.dark, .dark main {
   background-color: rgb(30 41 59) !important;
   color: white;
-}
 
-.dark {
-  color: white;
-}
-
-.dark #main {
-  background-color: rgb(30 41 59);
-  color: white;
 }
 
 .dark #header, .dark #characters, .dark #messages-section, .dark #feedback form{
@@ -112,44 +121,3 @@ html.dark, .dark main {
 .dark #form, .dark #feedback input, .dark #feedback textarea {
   background-color: #287B62;
 }
-
-/* @media (prefers-color-scheme: dark) {
-  html, #main {
-    background-color: rgb(30 41 59) !important;
-    color: white;
-  }
-  #header, #characters, #messages-section, #feedbackk{
-    background-color: rgb(15 23 42);
-  }
-
-  #messages-kept img, #messages-kept:hover {
-    background-color: rgb(71 85 105);
-  }
-
-  #character-background, #messages-kept:hover{
-    background-color: rgb(51 65 85);
-  }
-  
-  #characters-border{
-    border-color: rgb(2 6 23);
-  }
-
-  #user-textbubble{
-    background-color: #1E5C49
-  }
-
-  #bot-textbubble{
-    background-color: #5A5E69
-  }
-
-  #form {
-    background-color: #287B62;
-  }
-} */
-
-/* @media (prefers-color-scheme: light) {
-  html, #main {
-    background-color: #F1F5F9;
-    color: black;
-  }
-} */
