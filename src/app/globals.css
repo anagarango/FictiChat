@@ -81,7 +81,7 @@
   }
   
   #header-mobile{
-    display: block;
+    display: flex;
   }
 }
 
