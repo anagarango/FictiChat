@@ -65,7 +65,7 @@ export default function Home() {
         </div>
 
         <div className='flex py-32'>
-          <div className={`w-3/5 rounded-lg ${currentHomeTheme == "light" ? "bg-white shadow-[-80px_0px_0px_0px_rgb(255,255,255)]" : "bg-slate-900 shadow-[-80px_0px_0px_0px_rgb(15 23 42)]"}`}>
+          <div className={`w-3/5 rounded-lg ${currentHomeTheme == "light" ? "bg-white shadow-[80px_0px_0px_0px_rgb(255,255,255)]" : "bg-slate-900 shadow-[-80px_0px_0px_0px_rgb(15 23 42)]"}`}>
             <Image src={currentHomeTheme == "light" ? "/SafeAndSecureWhite.png" : "/SafeAndSecureDark.png"} layout='responsive' quality={100} alt="Devices" width={100} height={100} className="p-4 pr-12" />
           </div>
           <div className='w-2/5 mt-[-90px]'>
