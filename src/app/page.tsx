@@ -50,7 +50,7 @@ export default function Home() {
             </div>
             <div className='w-2/5 mt-[-90px]'>
               <h3 className='pb-5 font-bold text-lg text-right'>Deep Insights</h3>
-              <p className='text-right'>Gain unique perspectives and insights from characters with diverse backgrounds and expertise. Whether it's discussing technology with Nikola Tesla or about crossing the Atlantic Ocean with Amelia Earhart, you'll expand your knowledge in fascinating ways.</p>
+              <p className='text-right'>Gain unique perspectives and insights from characters with diverse backgrounds and expertise. Whether it is discussing technology with Nikola Tesla or about crossing the Atlantic Ocean with Amelia Earhart, you will expand your knowledge in fascinating ways.</p>
             </div>
           </div>
 
@@ -60,7 +60,7 @@ export default function Home() {
             </div>
           <div className='w-2/5 mt-[-90px]'>
             <h3 className='pb-5 font-bold text-lg'>Constant Updates</h3>
-            <p>If you have any new character suggestions through them through the feedback form, there's always something fresh to discover. Expand your roster of conversational companions and unlock even more exciting dialogue options.</p>
+            <p>If you have any new character suggestions through them through the feedback form, there is always something fresh to discover. Expand your roster of conversational companions and unlock even more exciting dialogue options.</p>
           </div>
         </div>
 
