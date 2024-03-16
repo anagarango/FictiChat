@@ -13,7 +13,7 @@ interface SessionStorage {
   email:string
 }
 
-export default function Header({currentUserId, setCurrentUserId=()=>{}}:{currentUserId:SessionStorage | string, setCurrentUserId:Function}){
+export default function Header({currentUserId, setCurrentUserId=()=>{}, setCurrentHomeTheme}:{currentUserId:SessionStorage | string, setCurrentUserId:Function, setCurrentHomeTheme?:Function}){
   const r = useRouter()
   const p = usePathname()
 
@@ -24,7 +24,10 @@ export default function Header({currentUserId, setCurrentUserId=()=>{}}:{current
 
   useEffect(() => {
     setSwitchTheme(resolvedTheme)
-  }, [resolvedTheme])
+    if(setCurrentHomeTheme){
+      setCurrentHomeTheme(resolvedTheme)
+    }
+  }, [resolvedTheme, setCurrentHomeTheme])
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -63,9 +66,15 @@ export default function Header({currentUserId, setCurrentUserId=()=>{}}:{current
     if(switchTheme == "light"){
       setSwitchTheme("dark")
       setTheme("dark")
+      if (setCurrentHomeTheme) {
+        setCurrentHomeTheme("dark");
+      }
     } else {
       setSwitchTheme("light")
       setTheme("light")
+      if (setCurrentHomeTheme) {
+        setCurrentHomeTheme("dark");
+      }
     }
   }
 
@@ -95,8 +104,8 @@ export default function Header({currentUserId, setCurrentUserId=()=>{}}:{current
     <div id="header" className='bg-white p-3 flex w-full justify-between items-center'>
       <div className='flex gap-4 items-center'>
         <Image alt="fictichat logo" width={100} height={100} onClick={()=>handleCurrentPage("/")} className='w-32 cursor-pointer' src="/fictichat.svg"/>
-        <p className={`cursor-pointer font-bold ${currentPage == "/" ? "text-[#50A98D]" : ""}`} onClick={()=>handleCurrentPage("/")}>Home</p>
-        <p className={`cursor-pointer font-bold ${currentPage == "/characters" ? "text-[#50A98D]" : ""}`} onClick={()=>handleCurrentPage("/characters")}>Characters</p>
+        <p className={`cursor-pointer font-bold ${currentPage == "/" ? "text-[#50A98D]" : "text-[#CDCDCD]"}`} onClick={()=>handleCurrentPage("/")}>Home</p>
+        <p className={`cursor-pointer font-bold ${currentPage == "/characters" ? "text-[#50A98D]" : "text-[#CDCDCD]"}`} onClick={()=>handleCurrentPage("/characters")}>Characters</p>
       </div>
       
       <div className='flex gap-4 items-center'>
