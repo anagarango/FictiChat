@@ -19,6 +19,7 @@ export default function Character() {
   
   const [currentUserId, setCurrentUserId] = useState<SessionStorage>();
   const [currentUserIdSavedChats, setCurrentUserIdSavedChats] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
 
   const handleSelectedCharacter = (characterName: string) => {
@@ -55,6 +56,7 @@ export default function Character() {
             setCurrentUserIdSavedChats(messageData);
           }
         }
+        setLoading(false)
       } catch (error) {
         console.log(error);
       }
@@ -99,31 +101,40 @@ export default function Character() {
             )
           })}
         </div>
-        <div id="messages-section" className='flex flex-col w-2/4 bg-white p-3 rounded-md'>
+        <div id="messages-section" className='flex flex-col w-2/4 h-full bg-white p-3 rounded-md'>
           <h1 className='text-lg font-bold mb-3'>Messages</h1>
-          {currentUserIdSavedChats.length < 1 && 
-            <div className='h-full flex flex-col justify-center items-center p-2'>
-              <Image src="/Conversation.svg" height={96} width={96} alt="text bubbles" className='h-2/4 mb-4 max-h-24'/>
-              {currentUserId && <p className="font-bold">{currentUserId.username},</p>}
-              <p className='text-center'>{currentUserId ? <span>no messages yet, start the conversation!</span> : "Sign In to start a conversation!"}</p>
+
+          {loading && 
+            <div className='min-h-full flex flex-col justify-center items-center mt-[-30px]'>
+              <Image src="/spinner.svg" height={96} width={96} alt="text bubbles" className='h-2/4 mb-4 max-h-24'/>
             </div>
           }
-          <div className='overflow-y-auto'>
-            {currentUserIdSavedChats.map((o:any, i:number) => {
-              var messages = JSON.parse(o.messages)
-              return (
-                <div id="messages-kept" key={`message ${i}`} className='flex items-center justify-between w-full border-b p-2 hover:bg-slate-100'>
-                  <div onClick={() => handleSelectedCharacter(o.character_name)} className='flex items-center cursor-pointer'>
-                    <Image src={`/characters/${o.character_name}.png`} width={70} height={70} alt={o.character_name} className={`rounded-full object-cover min-w-[70px] w-[70px] h-[70px]`} />
-                    <div className='pl-3 overflow-hidden'>
-                      <h3 className='text-md font-bold'>{o.character_name}</h3>
-                      <p className='truncate'>{messages[messages.length - 1].message}</p>
+          <div className={(currentUserIdSavedChats.length  && !loading) ? "overflow-y-auto" : "h-full flex flex-col justify-center items-center"}>
+            {(currentUserIdSavedChats.length === 0 && !loading) ? (
+              <>
+                <Image src="/Conversation.svg" height={96} width={96} alt="text bubbles" className='h-2/4 mb-4 max-h-24'/>
+                {currentUserId && <p className="font-bold">{currentUserId.username},</p>}
+                <p className='text-center'>{currentUserId ? <span>no messages yet, start the conversation!</span> : "Sign In to start a conversation!"}</p>
+              </>
+              ) : (
+              currentUserIdSavedChats.map((o:any, i:number) => {
+                var messages = JSON.parse(o.messages)
+                console.log(currentUserIdSavedChats)
+                return (
+                  <div id="messages-kept" key={`message ${i}`} className='flex items-center justify-between w-full border-b p-2 hover:bg-slate-100'>
+                    <div onClick={() => handleSelectedCharacter(o.character_name)} className='flex items-center cursor-pointer overflow-hidden'>
+                      <Image src={`/characters/${o.character_name}.png`} width={70} height={70} alt={o.character_name} className={`rounded-full object-cover min-w-[70px] w-[70px] h-[70px]`} />
+                      <div className='mx-3 overflow-hidden'>
+                        <h3 className='text-md font-bold'>{o.character_name}</h3>
+                        <p className='truncate'>{messages[messages.length - 1].message}</p>
+                      </div>
                     </div>
+                    <Image className='w-3 mr-2 cursor-pointer' onClick={() => handleDeleteCharacterChat(o.character_name)} width={70} height={70} alt="Delete" src="/close.png"/>
                   </div>
-                  <Image className='w-3 mr-2 cursor-pointer' onClick={() => handleDeleteCharacterChat(o.character_name)} width={70} height={70} alt="Delete" src="/close.png"/>
-                </div>
-              );
-            })}
+                );
+              })
+              )
+            }
           </div>
         </div>
       </div>
