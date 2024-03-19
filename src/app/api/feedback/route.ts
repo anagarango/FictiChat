@@ -14,9 +14,9 @@ export async function POST(request: NextRequest) {
 
   try {
     const result = await transporter.sendMail({
-      from: `"Fictichat 👻" <${process.env.PERSONAL_EMAIL}>`,
-      to: `"Fictichat 👻" <${process.env.PERSONAL_EMAIL}>`,
-      subject: `Fictichat feedback from ${requestData.email}`,
+      from: `"FictiChat 👻" <${process.env.PERSONAL_EMAIL}>`,
+      to: `"FictiChat 👻" <${process.env.PERSONAL_EMAIL}>`,
+      subject: `FictiChat feedback from ${requestData.email}`,
       html: `<p>Email: ${requestData.email}</p> <p>Message: ${requestData.message}</p>`
     });
     // console.log(JSON.stringify(result, null, 4))
