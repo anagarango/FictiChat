@@ -48,11 +48,10 @@ export default function Header({currentUserId, setCurrentUserId=()=>{}, setCurre
 
     const fetchCurrentPage = async () => {
       try {
-        const storedPage = localStorage.getItem("page");
-        if (storedPage) {
-          setCurrentPage(storedPage);
+        if (p == "/chat") {
+          setCurrentPage("/characters");
         } else {
-          setCurrentPage("/")
+          setCurrentPage(p)
         }
       } catch (error) {
         console.log(error)
@@ -82,7 +81,6 @@ export default function Header({currentUserId, setCurrentUserId=()=>{}, setCurre
   const logOut = () => {
     sessionStorage.removeItem("currentUser")
     if(p == "/chat"){
-      localStorage.setItem("page", "/");
       r.push("/")
     } else {
       window.location.reload();
@@ -95,7 +93,6 @@ export default function Header({currentUserId, setCurrentUserId=()=>{}, setCurre
   }
 
   const handleCurrentPage = (page:string) => {
-    localStorage.setItem("page", page);
     setCurrentPage(page)
     r.push(page)
   }

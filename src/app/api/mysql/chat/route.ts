@@ -11,7 +11,6 @@ export async function GET(request: NextRequest) {
     const [rows]:any = await connectionInstance.query("SELECT * FROM chat WHERE user_id = ? AND character_name = ?", [Number(currentUserId), character]);
 
     if (rows[0]) {
-      // console.log(rows[0])
       return NextResponse.json(rows[0]);
     }
   } catch (error:any) {
@@ -36,7 +35,7 @@ export async function POST(request: NextRequest) {
     
     // Pass an array of values as the second argument
     const result = await connectionInstance.query("INSERT INTO chat (user_id, character_name, messages) VALUES (?, ?, ?)", [currentUserId, character, chat]);
-    return NextResponse.json({ message: `Chat sent from ${currentUserId}`});
+    return NextResponse.json({ message: `Chat sent!`});
   } catch (error:any) {
     console.log(error);
     return NextResponse.json(

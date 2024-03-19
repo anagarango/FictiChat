@@ -26,7 +26,7 @@ export default function Home() {
         <div className='flex flex-col items-center pt-24 pb-10'>
           <h1 className='text-4xl font-bold text-center'>Create Immersive Conversations with your Favourite Popular Characters</h1>
           <h4 className='font-bold py-12 text-center'>Dive into captivating conversations as your favourite characters come to life through AI technology. Experience the thrill of personalized interactions and endless possibilities with our innovative chat platform.</h4>
-          <button className='bg-[#287B62] text-white py-2 px-3 rounded-md cursor-pointer duration-200 hover:bg-[#50A98D]' onClick={()=>{r.push("/characters"); localStorage.setItem("page", "/characters");}}>Try Fictional</button>
+          <button className='bg-[#287B62] text-white py-2 px-3 rounded-md cursor-pointer duration-200 hover:bg-[#50A98D]' onClick={()=>r.push("/characters")}>Try FictiChat</button>
         </div>
 
         <div className='w-full'>

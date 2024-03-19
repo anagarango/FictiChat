@@ -119,7 +119,6 @@ export default function Character() {
               ) : (
               currentUserIdSavedChats.map((o:any, i:number) => {
                 var messages = JSON.parse(o.messages)
-                console.log(currentUserIdSavedChats)
                 return (
                   <div id="messages-kept" key={`message ${i}`} className='flex items-center justify-between w-full border-b p-2 hover:bg-slate-100'>
                     <div onClick={() => handleSelectedCharacter(o.character_name)} className='flex items-center cursor-pointer overflow-hidden'>
