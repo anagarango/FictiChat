@@ -1,9 +1,8 @@
 "use client"
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Header from '../components/Header'
-import FeedbackForm from '../components/FeedbackForm'
 import axios from "axios"
 import Alert from '../components/Alert'
 
@@ -33,6 +32,7 @@ interface SessionStorage {
 
 export default function Chat(characterName:Params) {
   const r = useRouter();
+  const bottomText = useRef<HTMLDivElement>(null)
   const character:string = characterName.searchParams.character;
   const [currentUserId, setCurrentUserId] = useState<SessionStorage>();
   const [chat, setChat] = useState<ChatObject[]>([]);
@@ -68,7 +68,7 @@ export default function Chat(characterName:Params) {
     if(chat.length < 2){
       await axios({
         method:'post',
-        url: `/api/mysql/chat?currentUserId=${currentUserId?.id || ''}&character=${char}`,
+        url: `/api/mysql/chat?currentUserId=${currentUserId.id}&character=${char}`,
         data:{
           context: [...chat, {"user":character, "message":messageData.message, "role":"assistant"}]
         }
@@ -76,15 +76,18 @@ export default function Chat(characterName:Params) {
     } else {
       await axios({
         method:'put',
-        url: `/api/mysql/chat?currentUserId=${currentUserId?.id || ''}&character=${char}`,
+        url: `/api/mysql/chat?currentUserId=${currentUserId}&character=${char}`,
         data:{
           context: [...chat, {"user":character, "message":messageData.message, "role":"assistant"}]
         }
       });
     }
 
-    setAnimation(messageData.message)
-    setChat([...chat, {"user":character, "message":messageData.message, "role":"assistant"}])
+    setAnimation(messageData.message);
+    setChat([...chat, {"user":character, "message":messageData.message, "role":"assistant"}]);
+    if(bottomText.current){
+      bottomText.current.scrollIntoView({behavior:'smooth'});
+    }
     setLoading(false)
   }
 
@@ -94,7 +97,7 @@ export default function Chat(characterName:Params) {
         if (currentUserId){
           const response = await axios({
             method: 'get',
-            url: `/api/mysql/chat?currentUserId=${currentUserId.id || ''}&character=${character}`,
+            url: `/api/mysql/chat?currentUserId=${currentUserId.id}&character=${character}`,
           });
           const messageData = await response.data
           if(messageData){
@@ -133,7 +136,7 @@ export default function Chat(characterName:Params) {
               </div> 
             }
             {chat.map((o,i)=>(
-              <div id={`${o.user == "You" ? "user-textbubble" : "bot-textbubble" }`} key={`${i} character`} className={`flex mb-3 p-[10px] max-w-[75%] ${o.user == "You" ? "self-end bg-[#97D8C4] w-fit rounded-tl-2xl rounded-br-2xl rounded-bl-2xl border border-[#87BFAE]" : "bg-[#D9D9D9] w-fit rounded-tr-2xl rounded-br-2xl rounded-bl-2xl border border-[#CACACA]"}`}>
+              <div id={`${o.user == "You" ? "user-textbubble" : "bot-textbubble" }`} key={`${i} character`} className={`flex mb-2 p-[10px] max-w-[75%] ${o.user == "You" ? "self-end bg-[#97D8C4] w-fit rounded-tl-2xl rounded-br-2xl rounded-bl-2xl border border-[#87BFAE]" : "bg-[#D9D9D9] w-fit rounded-tr-2xl rounded-br-2xl rounded-bl-2xl border border-[#CACACA]"}`}>
                 {o.user == "You" ? (<p>{o.message}</p>) 
                   :
                   <p className="typewriter">
@@ -145,6 +148,7 @@ export default function Chat(characterName:Params) {
                 }
               </div>
             ))}
+            <div ref={bottomText} style={{opacity:0}}>.</div>
           </div>
           <form id="form" onSubmit={(e)=>handleResponses(e, message, character)} className="flex m-4 bg-[#D9F3EB] py-3 px-5 rounded-md justify-between border border-[#97D8C4]">
             <input type="text" placeholder={`Chat with ${character}...`} value={message} onChange={(e)=>{setMessage(e.target.value)}} className="outline-none  bg-transparent w-10/12"/>
