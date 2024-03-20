@@ -68,7 +68,7 @@ export default function Chat(characterName:Params) {
     if(chat.length < 2){
       await axios({
         method:'post',
-        url: `/api/mysql/chat?currentUserId=${currentUserId?.id || ''}&character=${char}`,
+        url: `/api/mysql/chat?currentUserId=${currentUserId.id}&character=${char}`,
         data:{
           context: [...chat, {"user":character, "message":messageData.message, "role":"assistant"}]
         }
@@ -76,7 +76,7 @@ export default function Chat(characterName:Params) {
     } else {
       await axios({
         method:'put',
-        url: `/api/mysql/chat?currentUserId=${currentUserId?.id || ''}&character=${char}`,
+        url: `/api/mysql/chat?currentUserId=${currentUserId}&character=${char}`,
         data:{
           context: [...chat, {"user":character, "message":messageData.message, "role":"assistant"}]
         }
@@ -97,7 +97,7 @@ export default function Chat(characterName:Params) {
         if (currentUserId){
           const response = await axios({
             method: 'get',
-            url: `/api/mysql/chat?currentUserId=${currentUserId.id || ''}&character=${character}`,
+            url: `/api/mysql/chat?currentUserId=${currentUserId.id}&character=${character}`,
           });
           const messageData = await response.data
           if(messageData){
