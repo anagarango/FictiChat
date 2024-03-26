@@ -7,7 +7,7 @@ export async function GET(request) {
     const email = searchParams.get('email');
     const password = searchParams.get('password');
     
-    const connectionInstance = await connection;
+    const connectionInstance = await connection.getConnection();
     const [rows] = await connectionInstance.query("SELECT * FROM user WHERE email = ? AND password = ?", [email, password]);
 
     if (rows[0]) {
@@ -23,10 +23,11 @@ export async function GET(request) {
 
 
 export async function POST(request) {
+  let connectionInstance;
   try {
     const { username, email, password } = await request.json();
 
-    const connectionInstance = await connection;
+    connectionInstance = await connection.getConnection();
     const [rows] = await connectionInstance.query("SELECT * FROM user WHERE email = ?", [email]);
     if (rows[0]) {
       return NextResponse.json({message: "Email already in use."});
@@ -36,5 +37,9 @@ export async function POST(request) {
     return NextResponse.json({username, email, password});
   } catch (error) {
     return NextResponse.json({ message: error.message },{ status: 500 });
+  } finally {
+    if (connectionInstance) {
+      connectionInstance.release(); // Release the connection back to the pool
+    }
   }
 }
