@@ -78,7 +78,7 @@ export default function Home() {
             </div>
             <div className='w-2/3'>
               <p className={`${currentHomeTheme == "light" ? "bg-white" : "bg-black"} w-fit italic mb-3 p-2 rounded-md`}>string</p>
-              <p>Enter whichever character name you'd like to chat with i.e. Albert Einstein, Elmo, etc.</p>
+              <p>Enter whichever character name you would like to chat with i.e. Albert Einstein, Elmo, etc.</p>
             </div>
           </div>
           <div className='flex gap-5'>
