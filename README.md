@@ -33,7 +33,7 @@ MYSQLUSER=
 MYSQLHOST=
 ```
 - [OpenAI API](https://openai.com/index/openai-api/), sign up and paste the API key to OPENAI_API_KEY
-- Add your credentials of your MySQL database, set up a database and add tables found under: src/app/api/DB.sql;
+- Add your credentials of your MySQL database, set up a database and add tables found under: src/app/api/mysql/db.sql;
 
 Start the server by running npm start.
 ```bash
