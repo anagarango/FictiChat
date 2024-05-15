@@ -8,12 +8,6 @@ export async function GET(request: NextRequest) {
     const message = searchParams.get('message');
     const apiKey = searchParams.get('apiKey');
 
-    // const requestData = await request.json();
-    // const formattedConversation = requestData.context.map(({ message, role }:ChatObject) => ({
-    //   role,
-    //   content: message
-    // }));
-
     const openai = new OpenAI({
       apiKey
     })

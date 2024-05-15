@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       model: 'gpt-3.5-turbo',
     });
 
-    return NextResponse.json({ message: "completion.choices[0].message.content"}, { status: 200 })
+    return NextResponse.json({ message: completion.choices[0].message.content}, { status: 200 })
   } catch (error) {
     console.error('Error processing request:', error);
     return NextResponse.error();
